@@ -150,6 +150,8 @@ while True:
     information.makeclasses()
     startBot(subreddit, comments_replied_to)
     
+    
+    #! Delete Everything under this comment if you don't want bot to make self posts
     #Every increment of days, make a self post with support data.
     if (datetime.now() - datetime(int(lastDate()[0]), int(lastDate()[1]), int(lastDate()[2]))).total_seconds() > ONEDAY: #<---- 7*ONEDAY for a week
         print("Making Self Post")

@@ -3,6 +3,8 @@ import praw
 import information
 import os
 import time
+import csv
+from datetime import datetime
 
 
 #Bot information stored in information.py
@@ -116,9 +118,50 @@ def get_saved_comments():
 comments_replied_to = get_saved_comments()
 
 
-while True:
+#Get the last date a post was made
+def lastDate():
+    if not os.path.isfile('datefile.txt'):
+        date = datetime.now().strftime("%Y, %m, %d")
+        with open('datefile.txt', 'w') as f:
+            f.write(date)
+            
+    with open('datefile.txt', 'r') as f:
+        date = f.read() 
+            
+    if not date:
+        with open('datefile.txt', 'w') as f:
+            f.write(datetime.now().strftime("%Y, %m, %d"))
+            
+            
+    date = date.split(',')
     
+            
+    return date
+
+
+#Define a day and self subreddit for self posts
+ONEDAY = 86400
+selfsubreddit = reddit.subreddit(f"u_{information.username}")
+
+
+while True:
+
     #Updates the support types on every run to keep the bot dynamic
     information.makeclasses()
     startBot(subreddit, comments_replied_to)
+    
+    #Every increment of days, make a self post with support data.
+    if (datetime.now() - datetime(int(lastDate()[0]), int(lastDate()[1]), int(lastDate()[2]))).total_seconds() > ONEDAY: #<---- 7*ONEDAY for a week
+        print("Making Self Post")
+        with open('datefile.txt', 'w') as f:
+            f.write(datetime.now().strftime("%Y, %m, %d"))
+        tempmessage = ""
+        with open('supportData.csv', 'r', newline='') as f:
+            reader = csv.reader(f)
+            csv_to_list = list(reader)
+        for item in csv_to_list:
+            tempmessage += f"{item[0]}, {item[1]}\n\n"
+        
+        print(tempmessage)
+        selfsubreddit.submit(title = "Information", selftext = tempmessage)
     

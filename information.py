@@ -54,14 +54,14 @@ def addsupportdata(supporttype):
     newrow = supporttype, 1
     
     #Make top row nice
-    with open(filename, 'r+') as t:
+    with open(filename, 'r+', newline='') as t:
         writer = csv.writer(t)
         if t.tell() == 0:
             writer.writerow(['Support Type', 'Times Requested'])
         t.close()
         
     #Add support type count if needed
-    with open(filename, 'r') as f:
+    with open(filename, 'r', newline='') as f:
         reader = csv.reader(f)
         supportList = list(reader)
         for item in supportList:
@@ -75,7 +75,7 @@ def addsupportdata(supporttype):
                     return
     #Add row if support type does not exist in the csv
     supportList.append(newrow)
-    with open(filename, 'w') as f:
+    with open(filename, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerows(supportList)
     f.close()
@@ -92,14 +92,14 @@ def addtocsv(user):
     newrow = str(user), 1
     
     #Make top row nice
-    with open(filename, 'r+') as t:
+    with open(filename, 'r+', newline='') as t:
         writer = csv.writer(t)
         if t.tell() == 0:
             writer.writerow(['User', 'Times Requested'])
     t.close()
     
     #Add one to persons count if needed
-    with open(filename, 'r') as f:
+    with open(filename, 'r', newline='') as f:
         reader = csv.reader(f)
         csvlist = list(reader)
         for item in csvlist:
@@ -113,7 +113,7 @@ def addtocsv(user):
                     return
     #Add new row if the user isnt in the database
     csvlist.append(newrow)
-    with open(filename, 'w') as f:
+    with open(filename, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerows(csvlist)
     f.close()
